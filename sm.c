@@ -92,6 +92,8 @@ int main(int argc, const char * argv[]) {
 
 
 
+    int status = 0; // For exit value when call status
+
     /*
      - In main, set up a loop and start getting user input.
      While user has not entered "exit" built-in command, keep running small
@@ -126,11 +128,11 @@ int main(int argc, const char * argv[]) {
 
             // if cd .. or cd myFolder
             if(strncmp(inputLine, "cd ", strlen("cd ")) == 0){
-                printf("You entered cd .. or cd myFolder\n");
                 sscanf(inputLine, "%*s %s", myPath);
+                printf("You entered cd %s\n", myPath);
+
                 chdir(myPath);
             }
-
 
             // If just cd
             else{
@@ -142,8 +144,8 @@ int main(int argc, const char * argv[]) {
 
         // CHECK STATUS
         else if (strcmp(inputLine, "status") == 0){
-            printf("status-ing...");
-//            status(exitstatus);
+            printf("status-ing...\n");
+            printf("exit value %d\n", status);
         }
 
 
