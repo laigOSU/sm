@@ -36,8 +36,6 @@ int main(int argc, const char * argv[]) {
 
         // GET INPUT
 
-
-
         // For getline() to get player input through stdin
         // Holds how large the allocated buffer is
         size_t inputSize = 0;
@@ -48,6 +46,7 @@ int main(int argc, const char * argv[]) {
         // For validating user input
         // bool validInput = false;
 
+        //    - Get your prompt ": " outputting so you hit that simple requirement
         // Prompt is a colon :
         printf(": ");
         fflush(stdout);
@@ -59,12 +58,17 @@ int main(int argc, const char * argv[]) {
         nullTerm = strchr(inputLine, '\n');
         *nullTerm = '\0';
         char myCommand[50]; // For copying the stdin input string without '\n'
-                            // Put user input string into nextRoom, and we will compare nextRoom
+        // Put user input string into nextRoom, and we will compare nextRoom
         strcpy(myCommand, inputLine);
 
         // CHECK FOR BUILT IN COMMANDS: EXIT, CD, STATUS
 
+        //    - Make sure you're handling blank input (easy peasy)
+
         // CHECK EXIT
+        //    - Get the loop to terminate when the user inputs "exit".
+        // In Assignment 2 we had to handle user input and input processing,
+        // so you can steal your implementations and you should be up and running quickly.
         if (strcmp(inputLine, "exit") == 0){
             printf("exiting...\n");
             exit(0);
@@ -77,16 +81,16 @@ int main(int argc, const char * argv[]) {
 
 
         // OTHERWISE, CHECK FOR NON-BUILT IN COMMANDS
-
+        
     };
 
-    //    - Get the loop to terminate when the user inputs "exit".  In Assignment 2 we had to handle user input and input processing, so you can steal your implementations and you should be up and running quickly.
+
     //
     //
-    //    - Get your prompt ": " outputting so you hit that simple requirement
+
     //
     //
-    //    - Make sure you're handling blank input (easy peasy)
+
     //
     //
     //    - Move from strstr() to strtok() for finer grained control - strstr() will find "exit" anywhere in a line, but you want to be able to process each token.  So what happens if someone inputs "exit", vs. "exit status", vs. "exit exit"?  When someone uses too many arguments I reject the command and say "Too many arguments to function."
