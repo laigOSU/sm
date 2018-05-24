@@ -3,7 +3,7 @@
 //  smallsh.c
 //
 //  Created by GL on 5/23/18.
-//  Copyright © 2018 Geneva Lai. All rights reserved.
+//  Copyright © 2018 GL. All rights reserved.
 //
 
 #include <stdio.h>
