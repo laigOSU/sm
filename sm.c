@@ -204,21 +204,20 @@ int main(int argc, const char * argv[]) {
             printf("exit value %d\n", status);
         }
 
-        // CHECK NULL OR COMMENT
-        else if(strcmp(inputLine, "#") == 0){
-            printf("Ignore comment line\n");
-            continue;
-        }
+        // CHECK COMMENT
+         else if(strncmp(inputLine, "#", strlen("#")) == 0){
+             printf("Ignore comment line\n");
+             continue;
+         }
 
+        // CHECK NULL
         else if (strcmp(inputLine, "") == 0){
             printf("if inputLine is doubel quotes \n");
             continue;
         }
 
-        else if (strcmp(inputLine, "\n") == 0){
-            printf("if inputLine is newline\n");
-        }
 
+        
         // OTHERWISE, CHECK FOR NON-BUILT IN COMMANDS
         // L3 p. 34
         // L3 pg. 26 - checking the exit status of child
