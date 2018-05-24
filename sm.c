@@ -1,6 +1,5 @@
 //
 //  main.c
-//  
 //
 //  Created by GL on 5/23/18.
 //  Copyright © 2018 GL. All rights reserved.
@@ -49,6 +48,10 @@ void getCommand(){
     printf(": ");
     fflush(stdout);
 
+    //    - Get the loop to terminate when the user inputs "exit".
+    // In Assignment 2 we had to handle user input and input processing,
+    // so you can steal your implementations and you should be up and running quickly.
+
     getline(&inputLine, &inputSize, stdin);
     // Find and replace the \n with \0 so that we can correctly use strcmp
     // to compare user input with any of the string values from the room
@@ -58,6 +61,8 @@ void getCommand(){
     char myCommand[50]; // For copying the stdin input string without '\n'
                         // Put user input string into nextRoom, and we will compare nextRoom
     strcpy(myCommand, inputLine);
+
+//    - Make sure you're handling blank input (easy peasy)
 
 }
 
@@ -97,57 +102,59 @@ int main(int argc, const char * argv[]) {
 
         // GET INPUT
 
-        /*
-        // For getline() to get player input through stdin
-        // Holds how large the allocated buffer is
-        size_t inputSize = 0;
-        // Points to a buffer allocated by getline() that holds our entered string
-        char* inputLine = NULL;
-        // Char pointer for finding the \n in inputLine strings and replacing with \0
-        char* nullTerm;
-        // For validating user input
-        // bool validInput = false;
+        // PROMPT USER (with :)
+        getCommand();
 
-        //    - Get your prompt ": " outputting so you hit that simple requirement
-        // Prompt is a colon :
-        printf(": ");
-        fflush(stdout);
-
-        getline(&inputLine, &inputSize, stdin);
-        // Find and replace the \n with \0 so that we can correctly use strcmp
-        // to compare user input with any of the string values from the room
-        // files (or "time" for time request).
-        nullTerm = strchr(inputLine, '\n');
-        *nullTerm = '\0';
-        char myCommand[50]; // For copying the stdin input string without '\n'
-        // Put user input string into nextRoom, and we will compare nextRoom
-        strcpy(myCommand, inputLine);
 
         // CHECK FOR BUILT IN COMMANDS: EXIT, CD, STATUS
 
-        //    - Make sure you're handling blank input (easy peasy)
+
 
         // CHECK EXIT
-        //    - Get the loop to terminate when the user inputs "exit".
-        // In Assignment 2 we had to handle user input and input processing,
-        // so you can steal your implementations and you should be up and running quickly.
-
-        */
-
-        getCommand();
-
         if (strcmp(inputLine, "exit") == 0){
             printf("exiting...\n");
+            chooseExit = true;
             exit(0);
         }
 
+
         // CHECK CD
+        // If user input cd or cd ..
+        // First check if entered cd at all
+        else if(strncmp(inputLine, "cd", strlen("cd")) == 0){
+            char myPath[50];
+
+            // if cd .. or cd myFolder
+            if(strncmp(inputLine, "cd ", strlen("cd ")) == 0){
+                printf("You entered cd .. or cd myFolder\n");
+                sscanf(inputLine, "%*s %s", myPath);
+                chdir(myPath);
+            }
+
+
+            // If just cd
+            else{
+                printf("You entered cd alone, going HOME\n");
+                chdir(getenv("HOME"));
+            }
+        }
+
 
         // CHECK STATUS
+        else if (strcmp(inputLine, "status") == 0){
+            printf("status-ing...");
+//            status(exitstatus);
+        }
 
 
 
         // OTHERWISE, CHECK FOR NON-BUILT IN COMMANDS
+
+        /*Your program must expand any instance of "$$" in a command into the 
+         process ID of the shell itself. Your shell does not otherwise perform 
+         variable expansion. This feature makes it easier to create a grading 
+         script that keeps your work separate.
+         */
         
     };
 
