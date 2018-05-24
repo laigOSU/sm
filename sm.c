@@ -25,6 +25,8 @@ typedef enum { false = 0, true = !false } bool;
 size_t inputSize = 0;
 // Points to a buffer allocated by getline() that holds our entered string
 char* inputLine = NULL;
+char inputLinePID[100]; // For inputline with PID appended at end
+
 // Char pointer for finding the \n in inputLine strings and replacing with \0
 char* nullTerm;
 // For validating user input
@@ -87,8 +89,7 @@ void getCommand(){
 int main(int argc, const char * argv[]) {
     bool chooseExit = false;
 
-    // insert code here...
-    printf("Hello, World!\n");
+
 
 
 
@@ -101,20 +102,64 @@ int main(int argc, const char * argv[]) {
 
      */
     while(chooseExit == false){
+        int i;
 
         // GET INPUT
 
         // PROMPT USER (with :)
-        getCommand();
+//        getCommand();
+
+
+        // For getline() to get player input through stdin
+        // Holds how large the allocated buffer is
+        size_t inputSize = 0;
+        // Points to a buffer allocated by getline() that holds our entered string
+        char* inputLine = NULL;
+        char inputLinePID[100]; // For inputline with PID appended at end
+
+        // Char pointer for finding the \n in inputLine strings and replacing with \0
+        char* nullTerm;
+        // For validating user input
+        // bool validInput = false;
+
+        printf(": ");
+        fflush(stdout);
+
+        //    - Get the loop to terminate when the user inputs "exit".
+        // In Assignment 2 we had to handle user input and input processing,
+        // so you can steal your implementations and you should be up and running quickly.
+
+        getline(&inputLine, &inputSize, stdin);
+        // Find and replace the \n with \0 so that we can correctly use strcmp
+        // to compare user input with any of the string values from the room
+        // files (or "time" for time request).
+        nullTerm = strchr(inputLine, '\n');
+        *nullTerm = '\0';
+        char myCommand[50]; // For copying the stdin input string without '\n'
+                            // Put user input string into nextRoom, and we will compare nextRoom
+        strcpy(myCommand, inputLine);
+        
+
+
+
+
+        // EXPAND PROCESS ID FOR GRADING SCRIPT TO APPLY
+        // change inputLine$$ into inputLine%d
+        for (i = 0; i < strlen(inputLine); i++){
+            if(inputLine[i] == '$' && inputLine[i+1] == '$'){
+                inputLine[i] = '%';
+                inputLine[i+1] = 'd';
+            }
+        }
+
+        // Format print inputLinePID by filling it with "inputLine%d, getpid()"
+        sprintf(inputLinePID, inputLine, getpid());
 
 
         // CHECK FOR BUILT IN COMMANDS: EXIT, CD, STATUS
-
-
-
         // CHECK EXIT
         if (strcmp(inputLine, "exit") == 0){
-            printf("exiting...\n");
+//            printf("exiting...\n");
             chooseExit = true;
             exit(0);
         }
@@ -129,14 +174,14 @@ int main(int argc, const char * argv[]) {
             // if cd .. or cd myFolder
             if(strncmp(inputLine, "cd ", strlen("cd ")) == 0){
                 sscanf(inputLine, "%*s %s", myPath);
-                printf("You entered cd %s\n", myPath);
+//                printf("You entered cd %s\n", myPath);
 
                 chdir(myPath);
             }
 
             // If just cd
             else{
-                printf("You entered cd alone, going HOME\n");
+//                printf("You entered cd alone, going HOME\n");
                 chdir(getenv("HOME"));
             }
         }
@@ -144,7 +189,7 @@ int main(int argc, const char * argv[]) {
 
         // CHECK STATUS
         else if (strcmp(inputLine, "status") == 0){
-            printf("status-ing...\n");
+//            printf("status-ing...\n");
             printf("exit value %d\n", status);
         }
 
