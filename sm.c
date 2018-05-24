@@ -64,7 +64,7 @@ void getCommand(){
                         // Put user input string into nextRoom, and we will compare nextRoom
     strcpy(myCommand, inputLine);
 
-//    - Make sure you're handling blank input (easy peasy)
+    //    - Make sure you're handling blank input (easy peasy)
 
 }
 
@@ -99,7 +99,6 @@ int main(int argc, const char * argv[]) {
      - In main, set up a loop and start getting user input.
      While user has not entered "exit" built-in command, keep running small
      shell prompts
-
      */
     while(chooseExit == false){
         int i;
@@ -107,7 +106,7 @@ int main(int argc, const char * argv[]) {
         // GET INPUT
 
         // PROMPT USER (with :)
-//        getCommand();
+        //        getCommand();
 
 
         // For getline() to get player input through stdin
@@ -138,28 +137,40 @@ int main(int argc, const char * argv[]) {
         char myCommand[50]; // For copying the stdin input string without '\n'
                             // Put user input string into nextRoom, and we will compare nextRoom
         strcpy(myCommand, inputLine);
-        
 
 
 
+        /*Your program must expand any instance of "$$" in a command into the
+         process ID of the shell itself. Your shell does not otherwise perform
+         variable expansion. This feature makes it easier to create a grading
+         script that keeps your work separate.
+         */
 
-        // EXPAND PROCESS ID FOR GRADING SCRIPT TO APPLY
-        // change inputLine$$ into inputLine%d
-        for (i = 0; i < strlen(inputLine); i++){
-            if(inputLine[i] == '$' && inputLine[i+1] == '$'){
-                inputLine[i] = '%';
-                inputLine[i+1] = 'd';
-            }
+//        // EXPAND PROCESS ID FOR GRADING SCRIPT TO APPLY
+//        // change inputLine$$ into inputLine%d
+//        for (i = 0; i < strlen(inputLine); i++){
+//            if(inputLine[i] == '$' && inputLine[i+1] == '$'){
+//                inputLine[i] = '%';
+//                inputLine[i+1] = 'd';
+//            }
+//        }
+//
+//        // Format print inputLinePID by filling it with "inputLine%d, getpid()"
+//        sprintf(inputLinePID, inputLine, getpid());
+
+
+        // Compare s1 and s2.  Find first occurrence of substring s2 inside s1.
+        // i.e., first first occurrence of $$ in inputLine
+        while(strstr(inputLine, "$$")){
+            sprintf(strstr(inputLine, "$$"), "%d", getpid());
         }
 
-        // Format print inputLinePID by filling it with "inputLine%d, getpid()"
-        sprintf(inputLinePID, inputLine, getpid());
-
-
+//        printf("inputLine is: %s", inputLine);
+        
         // CHECK FOR BUILT IN COMMANDS: EXIT, CD, STATUS
         // CHECK EXIT
         if (strcmp(inputLine, "exit") == 0){
-//            printf("exiting...\n");
+            printf("exiting...\n");
             chooseExit = true;
             exit(0);
         }
@@ -174,14 +185,14 @@ int main(int argc, const char * argv[]) {
             // if cd .. or cd myFolder
             if(strncmp(inputLine, "cd ", strlen("cd ")) == 0){
                 sscanf(inputLine, "%*s %s", myPath);
-//                printf("You entered cd %s\n", myPath);
+                printf("You entered cd %s\n", myPath);
 
                 chdir(myPath);
             }
 
             // If just cd
             else{
-//                printf("You entered cd alone, going HOME\n");
+                printf("You entered cd alone, going HOME\n");
                 chdir(getenv("HOME"));
             }
         }
@@ -189,21 +200,63 @@ int main(int argc, const char * argv[]) {
 
         // CHECK STATUS
         else if (strcmp(inputLine, "status") == 0){
-//            printf("status-ing...\n");
+            printf("status-ing...\n");
             printf("exit value %d\n", status);
         }
 
+        // CHECK NULL OR COMMENT
+        else if(strcmp(inputLine, "#") == 0){
+            printf("Ignore comment line\n");
+            continue;
+        }
 
+        else if (strcmp(inputLine, "") == 0){
+            printf("if inputLine is doubel quotes \n");
+            continue;
+        }
+
+        else if (strcmp(inputLine, "\n") == 0){
+            printf("if inputLine is newline\n");
+        }
 
         // OTHERWISE, CHECK FOR NON-BUILT IN COMMANDS
+        // L3 p. 34
+        // L3 pg. 26 - checking the exit status of child
+        else{
+            pid_t spawnPid = -5;
+            int childExitStatus = -5;
+//            int ten = 10;
 
-        /*Your program must expand any instance of "$$" in a command into the 
-         process ID of the shell itself. Your shell does not otherwise perform 
-         variable expansion. This feature makes it easier to create a grading 
-         script that keeps your work separate.
-         */
-        
-    };
+            spawnPid = fork();
+            switch(spawnPid){
+                // FORK FAILS
+                case -1:  { perror ("Hull Breach!\n"); exit(1); break; }
+                // CHILD
+                case 0: {
+                    printf("CHILD(%d): Sleeping for 1 second\n", getpid());
+                    sleep(1);
+                    printf("CHILD(%d): Converting into \'ls -a\'\n", getpid());
+                    execlp("ls", "ls", "-a", NULL);
+                    perror("CHILD: exec failure!\n");
+                    exit(2); break;
+                }
+                // PARENT
+                case 1: {
+                    printf("PARENT(%d): Sleeping for 2 seconds\n", getpid());
+                    sleep(2);
+                    printf("PARENT(%d): Wait()ing for child(%d) to terminate\n", getpid(), spawnPid);
+                    pid_t actualPid = waitpid(spawnPid, &childExitStatus, 0);
+                    printf("PARENT(%d): Child(%d) terminated, Exiting!\n", getpid(), actualPid);
+                    exit(0); break;
+
+                }
+
+            }
+            printf("This will be executed by both of us!\n");
+
+        }
+
+    }; //CLOSE PROMPT WHILE LOOP
 
 
     //
