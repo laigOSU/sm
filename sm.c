@@ -217,11 +217,59 @@ int main(int argc, const char * argv[]) {
         }
 
 
-        
+
         // OTHERWISE, CHECK FOR NON-BUILT IN COMMANDS
         // L3 p. 34
         // L3 pg. 26 - checking the exit status of child
         else{
+
+
+            /*
+            pid_t spawnPid = -5;
+            int childExitStatus = -5;
+            spawnPid = fork();
+            switch (spawnPid) {
+                case -1: { perror("Hull Breach!\n"); exit(1); break; }
+                case 0: {
+                    printf("CHILD(%d): Sleeping for 1 second\n", getpid());
+                    sleep(1);
+                    printf("CHILD(%d): Converting into \'ls -a\'\n", getpid());
+//                    execlp("ls", "ls", "-a", NULL);
+//                    perror("CHILD: exec failure!\n");
+                    exit(2); break;
+                }
+                default: {
+                    printf("PARENT(%d): Sleeping for 2 seconds\n", getpid());
+                    sleep(2);
+                    printf("PARENT(%d): Wait()ing for child(%d) to terminate\n", getpid(), spawnPid);
+                    pid_t actualPid = waitpid(spawnPid, &childExitStatus, 0);
+                    printf("PARENT(%d): Child(%d) terminated, Exiting!\n", getpid(), actualPid);
+                    exit(0); break;
+                }
+            }
+            */
+
+
+            /*
+            pid_t spawnPid = -5;
+            int childExitMethod = -5;
+            spawnPid = fork();
+            if (spawnPid == -1) //
+            {
+                perror("Hull Breach!\n");
+                exit(1);
+            }else if (spawnPid == 0) // Terminate the child process immediately
+            {
+                printf("CHILD: PID: %d, exiting!\n", spawnPid);
+                exit(0);
+            }
+            printf("PARENT: PID: %d, waiting...\n", spawnPid);
+            waitpid(spawnPid, &childExitMethod, 0);
+            printf("PARENT: Child process terminated, exiting!\n");
+            exit(0);
+            */
+
+            /*
             pid_t spawnPid = -5;
             int childExitStatus = -5;
 //            int ten = 10;
@@ -252,26 +300,13 @@ int main(int argc, const char * argv[]) {
 
             }
             printf("This will be executed by both of us!\n");
+            */
 
-        }
+        } // CLOSE LAST ELSE SECTION (NON-BUILT-IN COMMANDS)
 
     }; //CLOSE PROMPT WHILE LOOP
 
 
-    //
-    //
-
-    //
-    //
-
-    //
-    //
-    //    - Move from strstr() to strtok() for finer grained control - strstr() will find "exit" anywhere in a line, but you want to be able to process each token.  So what happens if someone inputs "exit", vs. "exit status", vs. "exit exit"?  When someone uses too many arguments I reject the command and say "Too many arguments to function."
-    //
-    //
-    //        - Once you have it handling "exit" and its variations flawlessly, start building out "cd", which should be pretty easy at that point.
-    //
-    //        - Once you have "cd", start building "status".
     
     return 0;
 }
